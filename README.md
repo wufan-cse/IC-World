@@ -9,7 +9,7 @@ This is the official implementation for [paper](https://arxiv.org/abs/2512.02793
 
 ## Key Features
 
-DanceGRPO has the following features:
+IC-World has the following features:
 - Support GRPO finetuning
 - Support Wan-2.1-I2V-14B
 
