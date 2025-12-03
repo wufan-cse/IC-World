@@ -2,7 +2,7 @@
 <div align="center">
   <a href='https://arxiv.org/abs/2512.02793'><img src='https://img.shields.io/badge/ArXiv-red?logo=arxiv'></a>  &nbsp;
   <a href='https://github.com/wufan-cse/IC-World'><img src="https://img.shields.io/badge/Code-9E95B7?logo=github"></a> &nbsp;
-  </a>&nbsp;
+  </a>
 </div>
 
 This is the official implementation for [paper](https://arxiv.org/abs/2512.02793), IC-World: In-Context Generation for Shared World Modeling.
