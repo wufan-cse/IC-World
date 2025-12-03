@@ -36,8 +36,19 @@ If you have any research or engineering inquiries, feel free to open issues or e
 
 IC-World presents strong capability in maintaining shared world consistency, ensuring that different viewpoints observe the same underlying environment. The following demos highlight this behavior: scenes and objects reappear across views. In the left example, the letter above the door first appears in the left view and later reappears in the right view. In the right example, the advertising tag on the lower-right table first appears in the right view and subsequently reappears in the left view.
 
-<video src="https://github.com/user-attachments/assets/5a97daaf-95ce-4cbb-a332-5ba4655e7914" width="48%" controls loop></video>
-<video src="https://github.com/user-attachments/assets/6a92d736-03c3-4728-b9c3-2b06a58aa09e" width="48%" controls loop></video>
+<!-- <video src="https://github.com/user-attachments/assets/5a97daaf-95ce-4cbb-a332-5ba4655e7914" width="48%" controls loop></video>
+<video src="https://github.com/user-attachments/assets/6a92d736-03c3-4728-b9c3-2b06a58aa09e" width="48%" controls loop></video> -->
+
+<table border="0" style="width: 100%; text-align: left; margin-top: 20px;">
+  <tr>
+      <td>
+          <video src="https://github.com/user-attachments/assets/5a97daaf-95ce-4cbb-a332-5ba4655e7914" width="100%" controls loop></video>
+      </td>
+      <td>
+          <video src="https://github.com/user-attachments/assets/6a92d736-03c3-4728-b9c3-2b06a58aa09e" width="100%" controls loop></video>
+      </td>
+  </tr>
+</table>
 
 #### Dynamic scene + Static camera
 
