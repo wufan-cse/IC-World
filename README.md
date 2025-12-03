@@ -36,12 +36,12 @@ If you have any research or engineering inquiries, feel free to open issues or e
 
 IC-World presents strong capability in maintaining shared world consistency, ensuring that different viewpoints observe the same underlying environment. The following demos highlight this behavior: scenes and objects reappear across views. In the left example, the letter above the door first appears in the left view and later reappears in the right view. In the right example, the advertising tag on the lower-right table first appears in the right view and subsequently reappears in the left view.
 
-<video src="https://github.com/wufan-cse/IC-World/blob/main/assets/demo1.mp4" width="48%" controls loop></video>
-<video src="https://github.com/wufan-cse/IC-World/blob/main/assets/demo2.mp4" width="48%" controls loop></video>
+<video src="https://raw.githubusercontent.com/wufan-cse/IC-World/main/assets/demo1.mp4" width="48%" controls loop></video>
+<video src="https://raw.githubusercontent.com/wufan-cse/IC-World/main/assets/demo2.mp4" width="48%" controls loop></video>
 
 #### Dynamic scene + Static camera
 
-<video src="https://github.com/wufan-cse/IC-World/blob/main/assets/demo3.mp4" width="48%" controls loop></video>
+<video src="https://raw.githubusercontent.com/wufan-cse/IC-World/main/assets/demo3.mp4" width="48%" controls loop></video>
 
 
 ## Acknowledgement
