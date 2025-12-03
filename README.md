@@ -32,7 +32,7 @@ If you have any research or engineering inquiries, feel free to open issues or e
 
 <!-- Here we present some rough demos for quick look. -->
 
-#### Static scene + Dynamic camera
+### Static scene + Dynamic camera
 
 IC-World presents strong capability in maintaining shared world consistency, ensuring that different viewpoints observe the same underlying environment. The following demos highlight this behavior: scenes and objects reappear across views. In the left example, the letter above the door first appears in the left view and later reappears in the right view. In the right example, the advertising tag on the lower-right table first appears in the right view and subsequently reappears in the left view.
 
@@ -50,9 +50,9 @@ IC-World presents strong capability in maintaining shared world consistency, ens
   </tr>
 </table>
 
-#### Dynamic scene + Static camera
+### Dynamic scene + Static camera
 
-<video src="https://github.com/user-attachments/assets/4dc66c86-59f8-47d6-af41-00f0700eff25" width="48%" controls loop></video>
+<video src="https://github.com/user-attachments/assets/4dc66c86-59f8-47d6-af41-00f0700eff25" width="0.48" controls loop></video>
 
 
 ## Acknowledgement
