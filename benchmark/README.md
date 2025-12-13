@@ -35,12 +35,12 @@ For a detailed explanation of these metrics, please refer to our [paper](https:/
     # clone the code
     git clone https://github.com/wufan-cse/IC-World.git
     cd IC-World
-
     git submodule update --init --recursive
 
     # create environment
     conda create -n icworld python=3.10
     conda activate icworld
+
     pip install -r requirements.txt
     ```
 
@@ -69,4 +69,4 @@ For a detailed explanation of these metrics, please refer to our [paper](https:/
     * `--confidence_threshold`: Confidence threshold for point filtering (choose from: `0.1`, `0.5`, `0.7`). (Default: `0.1`)
     * `--grid_size`: Grid size of query points(choose from: `10`, `20`, `30`). (Default: `10`)
     * `--interval`: Frame sampling interval. (Default: `10`)
-    * `--device`: Device to run inference on. (Default: `cuda`)
+    <!-- * `--device`: Device to run inference on. (Default: `cuda`) -->

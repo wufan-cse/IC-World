@@ -14,7 +14,7 @@ IC-World has the following features:
 
 ## Updates
 
-- __[2025.12.13]__: We released evaluation codes in [benchmark](https://github.com/wufan-cse/IC-World/benchmark).
+- __[2025.12.13]__: We released evaluation codes in [benchmark](https://github.com/wufan-cse/IC-World/tree/main/benchmark).
 - __[2025.12.03]__: 🔥 We released the paper in arXiv!
 
 If you have any research or engineering inquiries, feel free to open issues or email us directly at fan011@e.ntu.edu.sg.
@@ -25,7 +25,7 @@ If you have any research or engineering inquiries, feel free to open issues or e
 - [ ] Release training codes (before 2026.02.28).
 - [ ] Release dataset (before 2025.12.31).
 - [ ] Release inference codes (before 2025.12.31).
-- [x] Release evaluation metrics codes (before 2025.12.31).
+- [x] Release evaluation metrics codes.
 - [x] Release paper.
 
 <!-- ## Evaluation
@@ -82,7 +82,7 @@ We learned and reused code from the following projects:
 We thank the authors for their contributions to the community!
 
 ## Citation
-If you find IC-World useful and insightful for your research, please cite our paper:
+If you find IC-World useful and insightful for your research, please consider giving a star ⭐ and citation.
 
 ```bibtex
 @article{wu2025icworld,
