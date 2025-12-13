@@ -1,4 +1,4 @@
-<p align="center"><img src="assets/logo.jpg" width="20%"></p>
+<p align="center"><img src="assets/logo.jpg" width="25%"></p>
 <div align="center">
   <a href='https://arxiv.org/abs/2512.02793'><img src='https://img.shields.io/badge/ArXiv-red?logo=arxiv'></a>  &nbsp;
   <a href='https://github.com/wufan-cse/IC-World'><img src="https://img.shields.io/badge/Code-9E95B7?logo=github"></a> &nbsp;
@@ -7,14 +7,14 @@
 
 This is the official implementation for [paper](https://arxiv.org/abs/2512.02793), IC-World: In-Context Generation for Shared World Modeling.
 
-## Key Features
+<!-- ## Key Features
 
 IC-World has the following features:
-- Support GRPO finetuning
-- Support Wan-2.1-I2V-14B
+- Support GRPO finetuning + Wan-2.1-I2V-14B -->
 
 ## Updates
 
+- __[2025.12.13]__: We released evaluation codes in [benchmark](https://github.com/wufan-cse/IC-World/benchmark).
 - __[2025.12.03]__: 🔥 We released the paper in arXiv!
 
 If you have any research or engineering inquiries, feel free to open issues or email us directly at fan011@e.ntu.edu.sg.
@@ -23,12 +23,28 @@ If you have any research or engineering inquiries, feel free to open issues or e
 
 - [ ] Support more video foundation models.
 - [ ] Release training codes (before 2026.02.28).
-- [ ] Release evaluation metrics codes (before 2025.12.31).
 - [ ] Release dataset (before 2025.12.31).
 - [ ] Release inference codes (before 2025.12.31).
+- [x] Release evaluation metrics codes (before 2025.12.31).
 - [x] Release paper.
 
-## Video Demos
+<!-- ## Evaluation
+We provide a simple inference code using Wan2.2-14B-I2V and examples that allow readers to quickly experience the core idea of this paper.
+
+```bash
+# Create and activate a new conda environment
+conda create -n icworld python=3.10
+conda activate icworld
+
+pip install torch==2.7.1 torchvision==0.22.1 torchaudio==2.7.1
+pip install diffusers
+
+# Inference
+python inference.py -i examples/first_frames/0.jpg -p examples/prompts/0.txt -o examples/results/0.mp4
+``` -->
+
+
+## Video Demos of IC-World
 
 <!-- Here we present some rough demos for quick look. -->
 
@@ -60,12 +76,13 @@ If you have any research or engineering inquiries, feel free to open issues or e
 We learned and reused code from the following projects:
 - [FastVideo](https://github.com/hao-ai-lab/FastVideo)
 - [DanceGRPO](https://github.com/XueZeyue/DanceGRPO)
-- [Wan2.1](https://github.com/Wan-Video/Wan2.1)
+- [Wan2.1](https://github.com/Wan-Video/Wan2.1) & [Wan2.2](https://github.com/Wan-Video/Wan2.2)
+- [Diffusers](https://github.com/huggingface/diffusers)
 
 We thank the authors for their contributions to the community!
 
 ## Citation
-If you find IC-World useful for your research, please cite our paper:
+If you find IC-World useful and insightful for your research, please cite our paper:
 
 ```bibtex
 @article{wu2025icworld,
