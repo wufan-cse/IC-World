@@ -350,7 +350,7 @@ def main():
     parser.add_argument(
         '--interval',
         type=int,
-        default=10,
+        default=5,
         help='Frame sample interval'
     )
     parser.add_argument(

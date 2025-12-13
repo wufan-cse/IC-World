@@ -54,13 +54,13 @@ For a detailed explanation of these metrics, please refer to our [paper](https:/
     python benchmark/geometry_evaluator.py \
         --video_dir <your_own_directory> \
         --confidence_threshold 0.1 \
-        --interval 10
+        --interval 5
 
     # calculate the motion consistency score
     python benchmark/motion_evaluator.py \
         --video_dir <your_own_directory> \
         --grid_size 10 \
-        --interval 10
+        --interval 5
     ```
 
     **Arguments:**
@@ -68,5 +68,5 @@ For a detailed explanation of these metrics, please refer to our [paper](https:/
     * `--video_dir`: Path to the input video directory. **Note that each video is a horizontal combination of two sub-video**. (Default: `assets`)
     * `--confidence_threshold`: Confidence threshold for point filtering (choose from: `0.1`, `0.5`, `0.7`). (Default: `0.1`)
     * `--grid_size`: Grid size of query points(choose from: `10`, `20`, `30`). (Default: `10`)
-    * `--interval`: Frame sampling interval. (Default: `10`)
+    * `--interval`: Frame sampling interval. (Default: `5`)
     <!-- * `--device`: Device to run inference on. (Default: `cuda`) -->
