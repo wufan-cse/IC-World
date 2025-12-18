@@ -86,7 +86,7 @@ For a detailed explanation of these metrics, please refer to our [paper](https:/
             <video src="https://github.com/user-attachments/assets/f24247ee-217c-4927-9047-b0ac74d0532e" width="100%" controls loop></video>
         </td>
         <td>
-            <video src="https://github.com/user-attachments/assets/484576ed-3ee3-459e-92a4-d57c0faeac23" width="100%" controls loop></video>
+            <video src="https://github.com/user-attachments/assets/c88104ad-fbee-4da6-84ff-c090a3f1fd77" width="100%" controls loop></video>
         </td>
     </tr>
     </table>
