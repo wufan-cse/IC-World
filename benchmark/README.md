@@ -70,3 +70,38 @@ For a detailed explanation of these metrics, please refer to our [paper](https:/
     * `--grid_size`: Grid size of query points(choose from: `10`, `20`, `30`). (Default: `10`)
     * `--interval`: Frame sampling interval. (Default: `5`)
     <!-- * `--device`: Device to run inference on. (Default: `cuda`) -->
+
+
+4. **Example Results:**
+
+    Example videos used for evaluation can be found in [assets/benchmark](https://github.com/wufan-cse/IC-World/tree/main/assets/benchmark).
+
+    Geometry consistency score:
+    - Bad example (Left): Geometry_{average} = 0.8833
+    - Good example (Right): Geometry_{average} = 0.8950
+
+    <table border="0" style="width: 100%; text-align: left; margin-top: 20px;">
+    <tr>
+        <td>
+            <video src="https://github.com/user-attachments/assets/f24247ee-217c-4927-9047-b0ac74d0532e" width="100%" controls loop></video>
+        </td>
+        <td>
+            <video src="https://github.com/user-attachments/assets/484576ed-3ee3-459e-92a4-d57c0faeac23" width="100%" controls loop></video>
+        </td>
+    </tr>
+    </table>
+
+    Motion consistency score:
+    - Bad example (Left): Motion_{average} = 0.8965
+    - Good example (Right): Motion_{average} = 0.9028
+
+    <table border="0" style="width: 100%; text-align: left; margin-top: 20px;">
+    <tr>
+        <td>
+            <video src="https://github.com/user-attachments/assets/b0bc3083-3b28-4cc8-8944-364b4ef617e8" width="100%" controls loop></video>
+        </td>
+        <td>
+            <video src="https://github.com/user-attachments/assets/5a60f6be-0d49-4e8b-ad9a-c067c13ebd14" width="100%" controls loop></video>
+        </td>
+    </tr>
+    </table>
