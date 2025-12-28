@@ -7,13 +7,13 @@
 
 This is the official implementation for [paper](https://arxiv.org/abs/2512.02793), IC-World: In-Context Generation for Shared World Modeling.
 
-<!-- ## Key Features
+## Key Features
 
-IC-World has the following features:
-- Support GRPO finetuning + Wan-2.1-I2V-14B -->
+- GRPO + Wan-2.1-I2V-14B
 
 ## Updates
 
+- __[2025.12.28]__: We released [dataset](https://huggingface.co/datasets/fffan/IC-World-dataset) used in IC-World.
 - __[2025.12.13]__: We released evaluation codes in [benchmark](https://github.com/wufan-cse/IC-World/tree/main/benchmark).
 - __[2025.12.03]__: 🔥 We released the paper in arXiv!
 
@@ -23,8 +23,8 @@ If you have any research or engineering inquiries, feel free to open issues or e
 
 - [ ] Support more video foundation models.
 - [ ] Release training codes (before 2026.02.28).
-- [ ] Release dataset (before 2025.12.31).
 - [ ] Release inference codes (before 2025.12.31).
+- [x] Release dataset.
 - [x] Release evaluation metrics codes.
 - [x] Release paper.
 
