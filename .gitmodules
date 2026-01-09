@@ -1,6 +1,3 @@
-[submodule "thirdparty/SpaTrackerV2"]
-	path = thirdparty/SpaTrackerV2
-	url = https://github.com/wufan55/SpaTrackerV2
 [submodule "thirdparty/Pi3"]
 	path = thirdparty/Pi3
 	url = https://github.com/yyfz/Pi3
