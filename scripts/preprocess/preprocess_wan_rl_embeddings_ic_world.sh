@@ -1,5 +1,5 @@
 GPU_NUM=2 # 1,2,4,8
-MODEL_PATH="/dataset_rc_mm/share/models/huggingface.co/Wan-AI/Wan2.1-I2V-14B-480P-Diffusers"
+MODEL_PATH="./weights/IC-World-I2V-14B"
 OUTPUT_DIR="./data/preprocess/static_scene_dynamic_camera_train"
 
 torchrun --nproc_per_node=$GPU_NUM --master_port 19002 \
