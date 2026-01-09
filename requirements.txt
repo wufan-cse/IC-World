@@ -1,7 +1,7 @@
 torch==2.7.1
 torchvision==0.22.1
 torchaudio==2.7.1
-numpy
+numpy==1.26.1
 einops
 tqdm
 safetensors
@@ -46,3 +46,10 @@ gdown
 rich
 jaxtyping
 transformers
+accelerate
+ftfy
+diffusers
+lightning
+wandb
+peft
+liger_kernel
