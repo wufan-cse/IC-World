@@ -14,7 +14,6 @@ IC-World has the following features:
 
 ## Updates
 
-- __[2026.01.10]__: 🔥 We released inference & training codes.
 - __[2025.12.28]__: We released [dataset](https://huggingface.co/datasets/fffan/IC-World-dataset) used in IC-World.
 - __[2025.12.13]__: We released evaluation codes.
 - __[2025.12.03]__: 🔥 We released the paper in arXiv!
