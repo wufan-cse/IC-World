@@ -8,7 +8,7 @@ MODEL_PATH="./weights/IC-World-I2V-14B"
 # LORA_WEIGHT_PATH=None
 
 DATA_JSON_PATH="./data/preprocess/static_scene_dynamic_camera_train/videos2caption.json"
-OUTPUT_DIR="./outputs/grpo_geo_bs1_lr1e-5_gas8_ng8_lora_rank64_max200"
+OUTPUT_DIR="./outputs/grpo_geo_bs1_lr1e-5_gas8_ng32_lora_rank64_max101"
 
 ###Please adapt the torchrun scripts into your own environment
 torchrun --nnodes=1 --nproc_per_node=8 --node_rank=$RANK --master_addr=127.0.0.1 --master_port=29501 \
@@ -23,7 +23,7 @@ torchrun --nnodes=1 --nproc_per_node=8 --node_rank=$RANK --master_addr=127.0.0.1
     --train_sp_batch_size 1 \
     --dataloader_num_workers 4 \
     --gradient_accumulation_steps 8 \
-    --max_train_steps 202 \
+    --max_train_steps 101 \
     --learning_rate 1e-5 \
     --mixed_precision bf16 \
     --checkpointing_steps 50 \
@@ -45,7 +45,7 @@ torchrun --nnodes=1 --nproc_per_node=8 --node_rank=$RANK --master_addr=127.0.0.1
     --sampler_seed 1237 \
     --max_grad_norm 1.0 \
     --weight_decay 0.0001 \
-    --num_generations 8 \
+    --num_generations 32 \
     --shift 3.0 \
     --use_group \
     --timestep_fraction 0.6 \

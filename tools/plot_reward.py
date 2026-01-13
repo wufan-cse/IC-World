@@ -7,20 +7,22 @@ from sklearn.preprocessing import MinMaxScaler
 def moving_average(x, window_size):
     return np.convolve(x, np.ones(window_size) / window_size, mode='valid')
 
-def load_and_process(path, window_size, limit=200):
+def load_and_process(path, window_size, limit=100):
     data = np.loadtxt(path)
     data = moving_average(data[:limit], window_size)
+    scaler = MinMaxScaler()
+    data = scaler.fit_transform(data.reshape(-1, 1)).flatten()
     return data
 
 # Paths
 paths = [
-    "./outputs/grpo_geo_bs1_lr1e-5_gas8_ng8_lora_rank64_max200/reward.txt",
+    "./outputs/grpo_geo_bs1_lr1e-5_gas8_ng32_lora_rank64_max101/reward.txt",
 ]
 labels = ["reward"]
 colors = ["#1f77b4", "#ff7f0e", "#2ca02c"]
 
 # Load all
-datasets = [load_and_process(p, window_size=20) for p in paths]
+datasets = [load_and_process(p, window_size=20, limit=100) for p in paths]
 
 fig, ax = plt.subplots(figsize=(4.5, 4.5))
 

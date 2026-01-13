@@ -131,7 +131,56 @@ class MotionModel:
         
         return tracks.cpu().numpy(), c2w_traj.cpu().numpy() # (T, P, 3), (T, 4, 4)
             
-    def _motion_consistency_distance(
+    def _camera_distance(self, c2w_left: np.ndarray, c2w_right: np.ndarray) -> torch.Tensor:
+        """
+        Compute camera movement distance (average displacement per frame).
+        Lower values indicate more static cameras.
+        
+        Args:
+            c2w_left: (T, 4, 4) numpy - camera-to-world transformation matrices for left video
+            c2w_right: (T, 4, 4) numpy - camera-to-world transformation matrices for right video
+        
+        Returns:
+            Average camera movement distance (lower = more static)
+        """
+        if c2w_left is None or c2w_right is None:
+            return torch.tensor(0.0, device=self.device, dtype=torch.float32)
+        
+        if c2w_left.ndim != 3 or c2w_right.ndim != 3:
+            return torch.tensor(0.0, device=self.device, dtype=torch.float32)
+        
+        T_l = c2w_left.shape[0]
+        T_r = c2w_right.shape[0]
+        
+        if T_l < 2 or T_r < 2:
+            return torch.tensor(0.0, device=self.device, dtype=torch.float32)
+        
+        # Extract camera positions from c2w matrices (translation part: [:, :3, 3])
+        cam_pos_left = c2w_left[:, :3, 3]  # (T_l, 3)
+        cam_pos_right = c2w_right[:, :3, 3]  # (T_r, 3)
+        
+        # Compute camera movement: sum of squared displacements between consecutive frames
+        # For left camera
+        if T_l > 1:
+            left_displacements = np.diff(cam_pos_left, axis=0)  # (T_l-1, 3)
+            left_movement = np.linalg.norm(left_displacements, axis=1)  # (T_l-1,)
+            left_total_movement = np.mean(left_movement)  # Average movement per frame
+        else:
+            left_total_movement = 0.0
+        
+        # For right camera
+        if T_r > 1:
+            right_displacements = np.diff(cam_pos_right, axis=0)  # (T_r-1, 3)
+            right_movement = np.linalg.norm(right_displacements, axis=1)  # (T_r-1,)
+            right_total_movement = np.mean(right_movement)  # Average movement per frame
+        else:
+            right_total_movement = 0.0
+        
+        # Average movement of both cameras
+        avg_movement = (left_total_movement + right_total_movement) / 2.0
+        return torch.tensor(float(avg_movement), device=self.device, dtype=torch.float32)
+        
+    def _motion_distance(
         self, 
         tracks_left: np.ndarray, 
         tracks_right: np.ndarray,                              
@@ -210,10 +259,25 @@ class MotionModel:
         return torch.tensor(np.mean(motion_dists), device=self.device, dtype=torch.float32) 
 
     @torch.no_grad()
-    def from_sequences(self, left_seq: torch.Tensor, right_seq: torch.Tensor) -> torch.Tensor:
+    def from_sequences(
+        self, 
+        left_seq: torch.Tensor, 
+        right_seq: torch.Tensor,
+        mode: str = "motion"
+    ) -> torch.Tensor:
         """
-        left_seq/right_seq: (N,3,H,W) in [0,1], torch.float32 on any device
-        Returns: scalar reward tensor on self.device
+        Evaluate sequences based on different modes.
+        
+        Args:
+            left_seq/right_seq: (N,3,H,W) in [0,1], torch.float32 on any device
+            mode: Evaluation mode, one of:
+                - "motion": Motion consistency (default, 0=inconsistent, 1=consistent)
+                - "camera": Camera static reward (0=moving, 1=static)
+                - "combined": Combined reward balancing motion consistency and camera static
+                              (0=bad, 1=good: high motion consistency + static cameras)
+        
+        Returns:
+            Scalar score tensor on self.device
         """
         tracks_left, c2w_left = self._run_spatracker_pipeline(left_seq)
         tracks_right, c2w_right = self._run_spatracker_pipeline(right_seq)
@@ -221,13 +285,58 @@ class MotionModel:
         if tracks_left is None or tracks_right is None or c2w_left is None or c2w_right is None:
             return torch.tensor(0.0, device=self.device, dtype=torch.float32)
 
-        motion_distance = self._motion_consistency_distance(tracks_left, tracks_right, c2w_left, c2w_right)
-        motion_consistency_score = torch.exp(-motion_distance)
-        motion_consistency_score = torch.clamp(motion_consistency_score, 0.0, 1.0)
-        return motion_consistency_score
+        if mode == "motion":
+            # Motion consistency evaluation (default)
+            motion_distance = self._motion_distance(tracks_left, tracks_right, c2w_left, c2w_right)
+            motion_consistency_score = torch.exp(-motion_distance)
+            motion_consistency_score = torch.clamp(motion_consistency_score, 0.0, 1.0)
+            return motion_consistency_score
+        
+        elif mode == "camera":
+            # Camera static reward evaluation
+            camera_distance = self._camera_distance(c2w_left, c2w_right)
+            camera_norm = torch.exp(-camera_distance)
+            camera_norm = torch.clamp(camera_norm, 0.0, 1.0)
+            return camera_norm
+        
+        elif mode == "combined":
+            # Combined reward: encourage motion consistency and static cameras
+            motion_distance = self._motion_distance(tracks_left, tracks_right, c2w_left, c2w_right)
+            camera_distance = self._camera_distance(c2w_left, c2w_right)
+            
+            # Normalize both metrics to [0, 1] range
+            motion_norm = torch.exp(-motion_distance)  # 0=inconsistent, 1=consistent
+            camera_norm = torch.exp(-camera_distance)  # 0=moving, 1=static
+            
+            # Ensure values are in valid range
+            motion_norm = torch.clamp(motion_norm, 0.0, 1.0)
+            camera_norm = torch.clamp(camera_norm, 0.0, 1.0)
+            
+            # Combine: high motion consistency (motion_norm) + static cameras (camera_norm)
+            # Weight: 0.5 motion + 0.5 camera static
+            combined = 0.2 * motion_norm + 0.8 * camera_norm # TODO: preset weights, check out latest technique, GDPO: https://arxiv.org/abs/2601.05242
+            
+            # Final safety check
+            if not torch.isfinite(combined):
+                combined = torch.tensor(0.0, device=self.device, dtype=motion_norm.dtype)
+            
+            return torch.clamp(combined, 0.0, 1.0)
+        
+        else:
+            raise ValueError(f"Unknown mode: {mode}. Must be one of: 'motion', 'camera', 'combined'")
 
     @torch.no_grad()
-    def from_video_path(self, path: str) -> torch.Tensor:
+    def from_video_path(self, path: str, mode: str = "motion") -> torch.Tensor:
+        """
+        Evaluate a grid video (side-by-side left|right).
+        
+        Args:
+            path: Path to grid video file
+            mode: Evaluation mode ("motion", "camera", or "combined")
+        
+        Returns:
+            Scalar score tensor
+        """
         cap = cv2.VideoCapture(os.path.abspath(path))
         frames = []
         while True:
@@ -251,7 +360,7 @@ class MotionModel:
         right_seq = right_seq[:min_len]
         if left_seq.numel() == 0 or right_seq.numel() == 0:
             return torch.tensor(0.0, device='cpu', dtype=torch.float32)
-        return self.from_sequences(left_seq, right_seq)
+        return self.from_sequences(left_seq, right_seq, mode=mode)
 
 def evaluate(
     video_dir: str, 
@@ -259,7 +368,22 @@ def evaluate(
     grid_size: int = 10,
     tracker_model_path: str = None,
     vggt_model_path: str = None,
+    mode: str = "motion"
     ) -> Dict[str, any]:
+    """
+    Evaluate videos in a directory.
+    
+    Args:
+        video_dir: Directory containing videos to evaluate
+        interval: Frame sample interval
+        grid_size: Grid size for query points
+        tracker_model_path: Path to tracker model
+        vggt_model_path: Path to VGGT model
+        mode: Evaluation mode ("motion", "camera", or "combined")
+    
+    Returns:
+        Dictionary containing evaluation results
+    """
     
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     
@@ -308,7 +432,7 @@ def evaluate(
     failed_videos = []
     
     for i, video_path in enumerate(tqdm(video_files, desc="Processing videos"), 1):
-        score = evaluator.from_video_path(str(video_path))
+        score = evaluator.from_video_path(str(video_path), mode=mode)
         scores.append(score.item() if torch.is_tensor(score) else score)        
     
     # Calculate statistics
@@ -392,6 +516,13 @@ def main():
         default="weights/SpatialTrackerV2_Front",
         help='Path to VGGT model (default: weights/SpatialTrackerV2_Front)'
     )
+    parser.add_argument(
+        '--mode',
+        type=str,
+        default="motion",
+        choices=["motion", "camera", "combined"],
+        help='Evaluation mode: "motion" (motion consistency), "camera" (camera static), or "combined" (both)'
+    )
 
     args = parser.parse_args()
 
@@ -408,7 +539,8 @@ def main():
             interval=args.interval,
             grid_size=args.grid_size,
             tracker_model_path=args.tracker_model_path,
-            vggt_model_path=args.vggt_model_path
+            vggt_model_path=args.vggt_model_path,
+            mode=args.mode
         )
         return True
     except Exception as e:
