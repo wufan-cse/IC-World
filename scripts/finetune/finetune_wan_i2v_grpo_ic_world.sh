@@ -7,7 +7,7 @@ RANK=0
 MODEL_PATH="./weights/IC-World-I2V-14B"
 # LORA_WEIGHT_PATH=None
 
-DATA_JSON_PATH="./data/preprocess/static_scene_dynamic_camera_train/videos2caption.json"
+# DATA_JSON_PATH="./data/preprocess/static_scene_dynamic_camera_train/videos2caption.json"
 OUTPUT_DIR="./outputs/grpo_geo_bs1_lr1e-5_gas8_ng32_lora_rank64_max101"
 
 ###Please adapt the torchrun scripts into your own environment

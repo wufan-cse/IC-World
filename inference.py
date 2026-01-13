@@ -1,3 +1,4 @@
+import argparse
 import torch
 import torch.nn as nn
 import numpy as np
@@ -14,7 +15,6 @@ from safetensors.torch import load_file
 from safetensors import safe_open
 
 import re
-import numpy as np
 
 
 def crop_and_resize(image, target_height, target_width):
@@ -43,32 +43,111 @@ def split_grid_video(video_np: np.ndarray):
     return left_frames, right_frames
 
 
-model_id = "./weights/IC-World-I2V-14B"
-image_encoder = CLIPVisionModel.from_pretrained(model_id, subfolder="image_encoder", torch_dtype=torch.float32)
-vae = AutoencoderKLWan.from_pretrained(model_id, subfolder="vae", torch_dtype=torch.float32)
-pipe = WanImageToVideoPipeline.from_pretrained(model_id, vae=vae, image_encoder=image_encoder, torch_dtype=torch.bfloat16)
+def parse_args():
+    parser = argparse.ArgumentParser(description="IC-World I2V Inference Script")
+    
+    # Model arguments
+    parser.add_argument("--pretrained_model_name_or_path", type=str, default="./weights/IC-World-I2V-14B",
+                        help="Path to the model directory")
+    parser.add_argument("--lora_weights_path", type=str, default="./weights/IC-World-I2V-14B",
+                        help="Path to LoRA weights directory")
+    parser.add_argument("--lora_weight_name", type=str, default="pytorch_lora_weights.safetensors",
+                        help="Name of the LoRA weights file")
+    
+    # Input image arguments
+    parser.add_argument("--input_image1", type=str, default="./assets/img.png",
+                        help="Path to the first input image")
+    parser.add_argument("--input_image2", type=str, default="./assets/img1.png",
+                        help="Path to the second input image")
+    
+    # Generation arguments
+    parser.add_argument("--prompt", type=str, default="",
+                        help="Text prompt for generation")
+    parser.add_argument("--negative_prompt", type=str,
+                        default="Bright tones, overexposed, static, blurred details, subtitles, style, works, paintings, images, static, overall gray, worst quality, low quality, JPEG compression residue, ugly, incomplete, extra fingers, poorly drawn hands, poorly drawn faces, deformed, disfigured, misshapen limbs, fused fingers, still picture, messy background, three legs, many people in the background, walking backwards",
+                        help="Negative prompt for generation")
+    
+    # Video parameters
+    parser.add_argument("--height", type=int, default=480,
+                        help="Output video height")
+    parser.add_argument("--width", type=int, default=832,
+                        help="Output video width")
+    parser.add_argument("--num_frames", type=int, default=49,
+                        help="Number of frames to generate")
+    parser.add_argument("--fps", type=int, default=16,
+                        help="Frames per second for output video")
+    
+    # Inference parameters
+    parser.add_argument("--guidance_scale", type=float, default=1.0,
+                        help="Guidance scale for generation")
+    parser.add_argument("--num_inference_steps", type=int, default=4,
+                        help="Number of inference steps")
+    parser.add_argument("--seed", type=int, default=42,
+                        help="Random seed for generation")
+    
+    # Output arguments
+    parser.add_argument("--output", type=str, default="output.mp4",
+                        help="Output video file path")
+    
+    # Device arguments
+    parser.add_argument("--device", type=str, default="cuda",
+                        help="Device to run inference on (cuda/cpu)")
+    
+    return parser.parse_args()
 
-pipe.load_lora_weights("./weights/IC-World-I2V-14B", weight_name="pytorch_lora_weights.safetensors", prefix="transformer")
-pipe.to("cuda")
+
+def main():
+    args = parse_args()
+    
+    # Load model
+    print(f"Loading model from {args.pretrained_model_name_or_path}...")
+    image_encoder = CLIPVisionModel.from_pretrained(args.pretrained_model_name_or_path, subfolder="image_encoder", torch_dtype=torch.float32)
+    vae = AutoencoderKLWan.from_pretrained(args.pretrained_model_name_or_path, subfolder="vae", torch_dtype=torch.float32)
+    pipe = WanImageToVideoPipeline.from_pretrained(args.pretrained_model_name_or_path, vae=vae, image_encoder=image_encoder, torch_dtype=torch.bfloat16)
+    
+    # Load LoRA weights
+    print(f"Loading LoRA weights from {args.lora_weights_path}...")
+    pipe.load_lora_weights(args.lora_weights_path, weight_name=args.lora_weight_name, prefix="transformer")
+    pipe.to(args.device)
+    
+    # Load and process input images
+    print(f"Loading input images...")
+    input_image1 = Image.open(args.input_image1).convert("RGB")
+    input_image2 = Image.open(args.input_image2).convert("RGB")
+    
+    # Calculate individual image dimensions (half of total width)
+    individual_width = args.width // 2
+    individual_height = args.height
+    
+    input_image1 = crop_and_resize(input_image1, individual_height, individual_width)
+    input_image2 = crop_and_resize(input_image2, individual_height, individual_width)
+    
+    image = Image.fromarray(
+        np.hstack([np.array(input_image1), np.array(input_image2)])
+    )
+    
+    # Set up generator
+    generator = torch.Generator(device=args.device).manual_seed(args.seed)
+    
+    # Generate video
+    print(f"Generating video with {args.num_frames} frames...")
+    output = pipe(
+        image=image,
+        prompt=args.prompt,
+        negative_prompt=args.negative_prompt,
+        height=args.height,
+        width=args.width,
+        num_frames=args.num_frames,
+        guidance_scale=args.guidance_scale,
+        num_inference_steps=args.num_inference_steps,
+        generator=generator
+    ).frames[0]
+    
+    # Export video
+    print(f"Saving video to {args.output}...")
+    export_to_video(output, args.output, fps=args.fps)
+    print("Done!")
 
 
-input_image1 = Image.open("./assets/img.png").convert("RGB")
-input_image2 = Image.open("./assets/img1.png").convert("RGB")
-
-input_image1 = crop_and_resize(input_image1, 480, 416)
-input_image2 = crop_and_resize(input_image2, 480, 416)
-
-image = Image.fromarray(
-    np.hstack([np.array(input_image1), np.array(input_image2)])
-)
-
-prompt = ""
-negative_prompt = "Bright tones, overexposed, static, blurred details, subtitles, style, works, paintings, images, static, overall gray, worst quality, low quality, JPEG compression residue, ugly, incomplete, extra fingers, poorly drawn hands, poorly drawn faces, deformed, disfigured, misshapen limbs, fused fingers, still picture, messy background, three legs, many people in the background, walking backwards"
-
-generator = torch.Generator(device="cuda").manual_seed(42)
-
-output = pipe(
-    image=image, prompt=prompt, negative_prompt=negative_prompt, height=480, width=832, num_frames=49, guidance_scale=1.0, num_inference_steps=4, generator=generator
-).frames[0]
-
-export_to_video(output, "output.mp4", fps=16)
+if __name__ == "__main__":
+    main()

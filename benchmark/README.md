@@ -16,16 +16,16 @@ For a detailed explanation of these metrics, please refer to our [paper](https:/
 
     ```bash
     IC-World/weights
-        |-- lepard/pretrained/3dmatch/model_best_loss.pth
-        |-- Pi3
-        |   |-- config.json
-        |   |-- model.safetensors
-        |-- SpatialTrackerV2_Front
-        |   |-- config.json
-        |   |-- model.safetensors
-         -- SpatialTrackerV2-Offline    
-            |-- config.json
-            |-- model.safetensors
+    ├── lepard/pretrained/3dmatch/model_best_loss.pth
+    ├── Pi3
+    │   ├── config.json
+    │   ├── model.safetensors
+    ├── SpatialTrackerV2_Front
+    │   ├── config.json
+    │   ├── model.safetensors
+    └── SpatialTrackerV2-Offline    
+        ├── config.json
+        └── model.safetensors
     ```
 
 2. **Environment Preparation:**
