@@ -25,13 +25,10 @@ If you have any research or engineering inquiries, feel free to open issues or e
 
 ### Weights Preparation
 
-Our trained model can be download in [fffan/IC-World-I2V-14B](https://huggingface.co/fffan/IC-World-I2V-14B).
-
-LEPARD model can be downloaded [here](https://drive.google.com/file/d/17QGX_wwtDPXN1GSKJHY-6RTIRPz90RLn/view?usp=sharing).
-
-Pi3 model can be downloaded using huggingface, please refer [here](https://huggingface.co/yyfz233/Pi3).
-
-SpatialTrackerV2 model contains two parts, [Front model](https://huggingface.co/Yuxihenry/SpatialTrackerV2_Front) and [Offline model](https://huggingface.co/Yuxihenry/SpatialTrackerV2-Offline).
+1. Our trained model can be download in [fffan/IC-World-I2V-14B](https://huggingface.co/fffan/IC-World-I2V-14B).
+2. LEPARD model can be downloaded [here](https://drive.google.com/file/d/17QGX_wwtDPXN1GSKJHY-6RTIRPz90RLn/view?usp=sharing).
+3. Pi3 model can be downloaded using huggingface, please refer [here](https://huggingface.co/yyfz233/Pi3).
+4. SpatialTrackerV2 model contains two parts, [Front model](https://huggingface.co/Yuxihenry/SpatialTrackerV2_Front) and [Offline model](https://huggingface.co/Yuxihenry/SpatialTrackerV2-Offline).
 
 ```bash
 IC-World/weights
@@ -125,9 +122,9 @@ python fastvideo/models/motion_model.py \
 **Arguments:**
 
 * `--video_dir`: Path to the input video directory. **Note that each video is a horizontal combination of two sub-video**. (Default: `assets`)
-* `--confidence_threshold`: Confidence threshold for point filtering (choose from: `0.1`, `0.5`, `0.7`). (Default: `0.1`)
-* `--grid_size`: Grid size of query points(choose from: `10`, `20`, `30`). (Default: `10`)
-* `--interval`: Frame sampling interval. (Default: `5`)
+* `--confidence_threshold`: Confidence threshold for point filtering (choose from: `0.1`, `0.5`, `0.7`).
+* `--grid_size`: Grid size of query points(choose from: `10`, `20`, `30`).
+* `--interval`: Frame sampling interval.
 <!-- * `--device`: Device to run inference on. (Default: `cuda`) -->
 
 
@@ -148,7 +145,7 @@ python inference.py -i examples/first_frames/0.jpg -p examples/prompts/0.txt -o 
 ``` -->
 
 
-## Inference Demos of IC-World
+## Video Demos of IC-World
 
 <!-- Here we present some rough demos for quick look. -->
 
@@ -189,11 +186,8 @@ python inference.py -i examples/first_frames/0.jpg -p examples/prompts/0.txt -o 
 
 ## Acknowledgement
 We learned and reused code from the following projects:
-- [FastVideo](https://github.com/hao-ai-lab/FastVideo)
-- [DanceGRPO](https://github.com/XueZeyue/DanceGRPO)
-- [Wan2.1](https://github.com/Wan-Video/Wan2.1) & [Wan2.2](https://github.com/Wan-Video/Wan2.2)
-- [LightX2V](https://github.com/ModelTC/LightX2V)
-- [Diffusers](https://github.com/huggingface/diffusers)
+
+[FastVideo](https://github.com/hao-ai-lab/FastVideo), [DanceGRPO](https://github.com/XueZeyue/DanceGRPO), [Wan2.1](https://github.com/Wan-Video/Wan2.1), [LightX2V](https://github.com/ModelTC/LightX2V) and [Diffusers](https://github.com/huggingface/diffusers).
 
 We thank the authors for their contributions to the community!
 
