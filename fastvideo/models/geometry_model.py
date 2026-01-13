@@ -293,7 +293,7 @@ class GeometryModel:
             camera_norm = torch.clamp(camera_norm, 0.0, 1.0)
             
             # Combine: high geometry consistency (scene_norm) + high camera diversity (camera_norm)
-            combined = 0.8 * scene_norm + 0.2 * camera_norm # TODO: preset weights, check out latest technique, GDPO: https://arxiv.org/abs/2601.05242
+            combined = 0.5 * scene_norm + 0.5 * camera_norm # TODO: preset weights, check out latest technique, GDPO: https://arxiv.org/abs/2601.05242
             
             # Final safety check
             if not torch.isfinite(combined):

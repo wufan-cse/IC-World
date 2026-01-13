@@ -314,7 +314,7 @@ class MotionModel:
             
             # Combine: high motion consistency (motion_norm) + static cameras (camera_norm)
             # Weight: 0.5 motion + 0.5 camera static
-            combined = 0.2 * motion_norm + 0.8 * camera_norm # TODO: preset weights, check out latest technique, GDPO: https://arxiv.org/abs/2601.05242
+            combined = 0.5 * motion_norm + 0.5 * camera_norm # TODO: preset weights, check out latest technique, GDPO: https://arxiv.org/abs/2601.05242
             
             # Final safety check
             if not torch.isfinite(combined):
